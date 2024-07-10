@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Scrape",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/scrape.py",
+            "pythonPath": "${workspaceFolder}/env/bin/python",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/venv/bin/python"
+            }
+        }
+    ]
+}
