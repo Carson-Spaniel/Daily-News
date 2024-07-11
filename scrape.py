@@ -207,8 +207,8 @@ def send_email(html_content):
 
 if __name__ == "__main__":
     fetch = [
-        ['Wired', 'https://www.wired.com/category/security/', 'h3', 'summary-item__hed', 20, True],
-        # ['Hacker News', 'https://news.ycombinator.com/', 'span', 'titleline', 10],
+        # ['Wired', 'https://www.wired.com/category/security/', 'h3', 'summary-item__hed', 20, True],
+        ['Hacker News', 'https://news.ycombinator.com/', 'span', 'titleline', 5],
         ['TechCrunch', 'https://techcrunch.com/', 'h2', 'wp-block-post-title', 5],
         ['The Verge', 'https://www.theverge.com/', 'h2', 'leading-100', 5],
         ['Ars Technica', 'https://arstechnica.com/', 'h2', '', 5],
