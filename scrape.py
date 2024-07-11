@@ -210,10 +210,11 @@ if __name__ == "__main__":
     amount = 10
 
     fetch = [
-        ['Engadget', 'https://www.engadget.com/', 'h2', 'My(0)', amount],
+        ['Engadget', 'https://www.engadget.com', 'h2', 'My(0)', amount],
         ['TechCrunch', 'https://techcrunch.com/', 'h2', 'wp-block-post-title', amount],
         ['Gizmodo', 'https://gizmodo.com/latest', 'div', 'flex-1 self-center w-full', amount, [['div', 'hidden sm:block'],['p','mt-2 line-clamp-3 sm:line-clamp-2 font-serif xs:text-lg text-ellipsis break-words'],['div','mt-3 text-sm sm:text-base']]],
         ['Ars Technica', 'https://arstechnica.com/', 'h2', '', amount],
+        ['Mashable', 'https://mashable.com', 'div', 'flex flex-col flex-wrap mr-4 w-3/4 text-left md:mt-0 xl:relative items-around', amount, [['div', 'hidden text-base md:block md:mt-1 md:leading-tight text-primary-400 font-regular'],['div', 'flex flex-row mt-3 font-serif italic md:justify-start']]],
     ]
 
     news = []
@@ -231,4 +232,4 @@ if __name__ == "__main__":
     with open('newsletter.html', 'w') as news:
         news.write(formatted_news)
     
-    #send_email(formatted_news)
+    send_email(formatted_news)
