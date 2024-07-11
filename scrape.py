@@ -91,20 +91,20 @@ def format_news(news_list):
                 body, div.main {{
                     font-family: 'Arial', sans-serif;
                     line-height: 1.6;
-                    background-color: #0d1117;
+                    background-color: #f0f2f5; /* Lighter background */
                     margin: 0;
                     padding: 20px;
-                    color: #e6edf3;
+                    color: #1f2937; /* Darker text color */
                 }}
                 h1 {{
-                    color: #e6edf3;
+                    color: #1f2937; /* Darker heading color */
                     text-align: center;
                     margin-bottom: 20px;
                     font-size: 2.5em;
                     text-transform: uppercase;
                 }}
                 p {{
-                    color: #e6edf3;
+                    color: #1f2937; /* Darker paragraph text color */
                     text-align: center;
                     margin-bottom: 10px;
                 }}
@@ -112,10 +112,11 @@ def format_news(news_list):
                     font-style: italic;
                     text-align: center;
                     margin-bottom: 30px;
+                    color: #4a5568; /* Slightly darker quote text */
                 }}
                 .weather {{
                     font-weight: bold;
-                    color: #007bff;
+                    color: #007bff; /* Accent color */
                     text-align: center;
                     white-space: pre-line; /* Maintain line breaks in <p> */
                 }}
@@ -127,12 +128,12 @@ def format_news(news_list):
                 li {{
                     margin-bottom: 10px;
                     padding: 10px;
-                    background-color: #161b22;
+                    background-color: #e2e8f0; /* Lighter background for list items */
                     border-radius: 5px;
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 }}
                 a {{
-                    color: #007bff;
+                    color: #007bff; /* Accent color for links */
                     text-decoration: none;
                     font-weight: bold;
                 }}
