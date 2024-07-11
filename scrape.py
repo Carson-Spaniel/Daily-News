@@ -42,9 +42,9 @@ def get_weather(api_key):
         region = data['region']
         lat, lon = data['loc'].split(',')
         weather_url = f'http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric'
-        #weather_response = requests.get(weather_url)
+        weather_response = requests.get(weather_url)
 
-        weather_data = {'coord': {'lon': -97.6772, 'lat': 30.6327}, 'weather': [{'id': 800, 'main': 'Clear', 'description': 'clear sky', 'icon': '01d'}], 'base': 'stations', 'main': {'temp': 32.14, 'feels_like': 33.47, 'temp_min': 31.04, 'temp_max': 33.02, 'pressure': 1014, 'humidity': 45, 'sea_level': 1014, 'grnd_level': 984}, 'visibility': 10000, 'wind': {'speed': 3.09, 'deg': 120}, 'clouds': {'all': 0}, 'dt': 1720659746, 'sys': {'type': 2, 'id': 2013267, 'country': 'US', 'sunrise': 1720611352, 'sunset': 1720661762}, 'timezone': -18000, 'id': 4693342, 'name': 'Georgetown', 'cod': 200}#weather_response.json()
+        weather_data = weather_response.json() #{'coord': {'lon': -97.6772, 'lat': 30.6327}, 'weather': [{'id': 800, 'main': 'Clear', 'description': 'clear sky', 'icon': '01d'}], 'base': 'stations', 'main': {'temp': 32.14, 'feels_like': 33.47, 'temp_min': 31.04, 'temp_max': 33.02, 'pressure': 1014, 'humidity': 45, 'sea_level': 1014, 'grnd_level': 984}, 'visibility': 10000, 'wind': {'speed': 3.09, 'deg': 120}, 'clouds': {'all': 0}, 'dt': 1720659746, 'sys': {'type': 2, 'id': 2013267, 'country': 'US', 'sunrise': 1720611352, 'sunset': 1720661762}, 'timezone': -18000, 'id': 4693342, 'name': 'Georgetown', 'cod': 200}
 
         if weather_data['cod'] == 200:
             weather_description = weather_data['weather'][0]['description'].title()
@@ -67,8 +67,8 @@ def get_weather(api_key):
 
 def get_daily_quote(api_key):
     url = f'http://quotes.rest/qod.json?api_key={api_key}'
-    #response = requests.get(url)
-    data = {'success': {'total': 1}, 'contents': {'quotes': [{'id': 'wPkodOctkz8HYuyIo1e8FgeF', 'quote': 'Winning is not everything, but the effort to win is.', 'length': 52, 'author': 'Zig Ziglar', 'language': 'en', 'tags': ['effort', 'inspire', 'winning', 'win'], 'sfw': 'sfw', 'permalink': 'https://theysaidso.com/quote/zig-ziglar-winning-is-not-everything-but-the-effort-to-win-is', 'title': 'Inspiring Quote of the day', 'category': 'inspire', 'background': 'https://theysaidso.com/assets/images/qod/qod-inspire.jpg', 'date': '2024-07-11'}]}, 'copyright': {'url': 'https://quotes.rest', 'year': '2024'}}#response.json()
+    response = requests.get(url)
+    data = response.json() #{'success': {'total': 1}, 'contents': {'quotes': [{'id': 'wPkodOctkz8HYuyIo1e8FgeF', 'quote': 'Winning is not everything, but the effort to win is.', 'length': 52, 'author': 'Zig Ziglar', 'language': 'en', 'tags': ['effort', 'inspire', 'winning', 'win'], 'sfw': 'sfw', 'permalink': 'https://theysaidso.com/quote/zig-ziglar-winning-is-not-everything-but-the-effort-to-win-is', 'title': 'Inspiring Quote of the day', 'category': 'inspire', 'background': 'https://theysaidso.com/assets/images/qod/qod-inspire.jpg', 'date': '2024-07-11'}]}, 'copyright': {'url': 'https://quotes.rest', 'year': '2024'}}
 
     if 'contents' in data and 'quotes' in data['contents']:
         quote = data['contents']['quotes'][0]['quote']
@@ -88,22 +88,23 @@ def format_news(news_list):
     <html>
         <head>
             <style>
-                body {{
+                body, div.main {{
                     font-family: 'Arial', sans-serif;
                     line-height: 1.6;
-                    background-color: #f9f9f9;
+                    background-color: #0d1117;
                     margin: 0;
                     padding: 20px;
+                    color: #e6edf3;
                 }}
                 h1 {{
-                    color: #333;
+                    color: #e6edf3;
                     text-align: center;
                     margin-bottom: 20px;
                     font-size: 2.5em;
                     text-transform: uppercase;
                 }}
                 p {{
-                    color: #666;
+                    color: #e6edf3;
                     text-align: center;
                     margin-bottom: 10px;
                 }}
@@ -126,7 +127,7 @@ def format_news(news_list):
                 li {{
                     margin-bottom: 10px;
                     padding: 10px;
-                    background-color: #fff;
+                    background-color: #161b22;
                     border-radius: 5px;
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 }}
@@ -141,11 +142,12 @@ def format_news(news_list):
             </style>
         </head>
         <body>
-            <h1>Daily Newsletter</h1>
-            <p class="weather">{current_date}</p>
-            <p class="weather">{weather_info}</p>
-            <p class="quote">{daily_quote}</p>
-            <ul>
+            <div class="main">
+                <h1>Daily Newsletter</h1>
+                <p class="weather">{current_date}</p>
+                <p class="weather">{weather_info}</p>
+                <p class="quote">{daily_quote}</p>
+                <ul>
     """
 
     prev_news = news_list[0][0]
@@ -171,7 +173,7 @@ def format_news(news_list):
 
         news_num += [f"<a href='{news_item[2]}'><li>{count}. {news_item[1]}</li></a>"]
 
-    formatted_news += "</ul></body></html>"
+    formatted_news += "</ul></div></body></html>"
 
     return formatted_news
 
@@ -214,7 +216,14 @@ if __name__ == "__main__":
     for i, source in enumerate(fetch):
         if i == len(fetch)-1:
             source[4] += 1
-        news.extend(get_news_source(*source))
+        try:
+            news.extend(get_news_source(*source))
+        except:
+            pass
 
     formatted_news = format_news(news)
+
+    with open('newsletter.html', 'w') as news:
+        news.write(formatted_news)
+    
     send_email(formatted_news)
