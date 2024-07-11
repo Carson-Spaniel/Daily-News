@@ -95,6 +95,8 @@ def format_news(news_list):
                     margin: 0;
                     padding: 20px;
                     color: #1f2937; /* Darker text color */
+                    max-width: 800px;
+                    margin: 0 auto;
                 }}
                 h1 {{
                     color: #1f2937; /* Darker heading color */
