@@ -6,7 +6,7 @@ from secret import API_KEY, TOKEN, QUOTE_API, GMAIL_USER, GMAIL_KEY, RECIPIENTS
 from bs4 import BeautifulSoup
 import requests
 
-def get_news_source(source, url, element, class_, amount, reversed=False):
+def get_news_source(source, url, element, class_, amount):
     news = []
 
     # Fetch headlines from the source
@@ -14,14 +14,14 @@ def get_news_source(source, url, element, class_, amount, reversed=False):
     news_soup = BeautifulSoup(news_response.text, 'html.parser')
     news_headlines = news_soup.find_all(element, class_=class_)
 
-    if reversed:
-        reduced_headlines = news_headlines[(len(news_headlines))-(amount):(len(news_headlines)+1)]
-    else:
-        reduced_headlines = news_headlines[:amount]
-
-    for headline in reduced_headlines:
+    for headline in news_headlines:
         link = headline.find('a')['href'] if headline.find('a') else url
-        news.append((source, headline.get_text(), link))
+        if link.startswith('/'):
+            link = url + link
+        if (source, headline.get_text(), link) not in news:
+            news.append((source, headline.get_text(), link))
+        if len(news) == amount:
+            break
 
     return news
 
@@ -52,14 +52,9 @@ def get_weather(api_key):
             temp_fahrenheit = round(temp_celsius * 9/5 + 32, 1)
             temp_feels_like_celsius = weather_data['main']['feels_like']
             temp_feels_like_fahrenheit = round(temp_feels_like_celsius * 9/5 + 32, 1)
-            humidity = weather_data['main']['humidity']
             wind_speed_mps = weather_data['wind']['speed']
             wind_speed_mph = round(wind_speed_mps * 2.237, 1)  # Convert m/s to mph
-            return f"Today's weather in {city}, {region}: {weather_description}\n" \
-                   f"Temperature: {temp_fahrenheit}°F\n" \
-                   f"Feels like: {temp_feels_like_fahrenheit}°F\n" \
-                   f"Humidity: {humidity}%\n" \
-                   f"Wind: {wind_speed_mph} mph"
+            return f"{city}, {region}: {weather_description}, {temp_feels_like_fahrenheit}°F, {wind_speed_mph} mph\n"
         else:
             return "Failed to fetch weather information"
     else:
@@ -79,7 +74,7 @@ def get_daily_quote(api_key):
 
 def format_news(news_list):
     # Get the current date and weekday
-    current_date = strftime("%A, %B %d, %Y")
+    current_date = strftime(" %I:%M %p %A, %B %d, %Y")
     weather_info = get_weather(API_KEY)  # Fetch detailed weather information
     daily_quote = get_daily_quote(QUOTE_API)
     
@@ -89,7 +84,7 @@ def format_news(news_list):
         <head>
             <style>
                 body, div.main {{
-                    font-family: 'Arial', sans-serif;
+                    font-family: 'Courier New', Monospace;
                     line-height: 1.6;
                     background-color: #f0f2f5; /* Lighter background */
                     margin: 0;
@@ -146,8 +141,8 @@ def format_news(news_list):
         </head>
         <body>
             <div class="main">
-                <h1>Daily Newsletter</h1>
-                <p class="weather">{current_date}</p>
+                <h1>Daily_Newsletter</h1>
+                <h2 class="weather">{current_date}</h2>
                 <p class="weather">{weather_info}</p>
                 <p class="quote">{daily_quote}</p>
                 <ul>
@@ -174,7 +169,7 @@ def format_news(news_list):
         else:
             count += 1
 
-        news_num += [f"<a href='{news_item[2]}'><li>{count}. {news_item[1]}</li></a>"]
+        news_num += [f"<a href='{news_item[2]}'><li>{count-1}. {news_item[1]}</li></a>"]
 
     formatted_news += "</ul></div></body></html>"
 
@@ -206,12 +201,13 @@ def send_email(html_content):
         print(f"Failed to send email. Error: {str(e)}")
 
 if __name__ == "__main__":
+    amount = 10
+
     fetch = [
-        # ['Wired', 'https://www.wired.com/category/security/', 'h3', 'summary-item__hed', 20, True],
-        ['Hacker News', 'https://news.ycombinator.com/', 'span', 'titleline', 5],
-        ['TechCrunch', 'https://techcrunch.com/', 'h2', 'wp-block-post-title', 5],
-        ['The Verge', 'https://www.theverge.com/', 'h2', 'leading-100', 5],
-        ['Ars Technica', 'https://arstechnica.com/', 'h2', '', 5],
+        ['Engadget', 'https://www.engadget.com/tomorrow/', 'h4', 'My(0)', amount],
+        ['TechCrunch', 'https://techcrunch.com/', 'h2', 'wp-block-post-title', amount],
+        ['The Verge', 'https://www.theverge.com/', 'h2', 'leading-100', amount],
+        ['Ars Technica', 'https://arstechnica.com/', 'h2', '', amount],
     ]
 
     news = []
