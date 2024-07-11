@@ -1,2 +1,4 @@
 env/
 *.html
+secret.py
+*.pyc
