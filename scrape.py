@@ -186,7 +186,7 @@ def send_email(html_content):
     sender_email = GMAIL_USER
     sender_password = GMAIL_KEY
     receiver_email = RECIPIENTS
-    subject = "Daily Newsletter - " + strftime("%A, %B %d, %Y")
+    subject = "Daily_Newsletter"
 
     # Setup the MIME
     message = MIMEMultipart()
