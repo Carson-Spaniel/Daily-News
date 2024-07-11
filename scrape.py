@@ -1,7 +1,10 @@
-import requests
-from bs4 import BeautifulSoup
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from time import strftime
-from secret import API_KEY, TOKEN, QUOTE_API
+from secret import API_KEY, TOKEN, QUOTE_API, GMAIL_USER, GMAIL_KEY, RECIPIENTS
+from bs4 import BeautifulSoup
+import requests
 
 def get_news_source(source, url, element, class_, amount, reversed=False):
     news = []
@@ -49,15 +52,11 @@ def get_weather(api_key):
             temp_fahrenheit = round(temp_celsius * 9/5 + 32, 1)
             temp_feels_like_celsius = weather_data['main']['feels_like']
             temp_feels_like_fahrenheit = round(temp_feels_like_celsius * 9/5 + 32, 1)
-            temp_min_celsius = weather_data['main']['temp_min']
-            temp_min_fahrenheit = round(temp_min_celsius * 9/5 + 32, 1)
-            temp_max_celsius = weather_data['main']['temp_max']
-            temp_max_fahrenheit = round(temp_max_celsius * 9/5 + 32, 1)
             humidity = weather_data['main']['humidity']
             wind_speed_mps = weather_data['wind']['speed']
             wind_speed_mph = round(wind_speed_mps * 2.237, 1)  # Convert m/s to mph
             return f"Today's weather in {city}, {region}: {weather_description}\n" \
-                   f"Temperature: {temp_fahrenheit}°F (High: {temp_max_fahrenheit}°F, Low: {temp_min_fahrenheit}°F)\n" \
+                   f"Temperature: {temp_fahrenheit}°F\n" \
                    f"Feels like: {temp_feels_like_fahrenheit}°F\n" \
                    f"Humidity: {humidity}%\n" \
                    f"Wind: {wind_speed_mph} mph"
@@ -176,6 +175,31 @@ def format_news(news_list):
 
     return formatted_news
 
+def send_email(html_content):
+    # Email information
+    sender_email = GMAIL_USER
+    sender_password = GMAIL_KEY
+    receiver_email = RECIPIENTS
+    subject = "Daily Newsletter - " + strftime("%A, %B %d, %Y")
+
+    # Setup the MIME
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = receiver_email
+    message["Subject"] = subject
+
+    # Attach HTML content to the email
+    message.attach(MIMEText(html_content, "html"))
+
+    # Connect to SMTP server and send email
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, receiver_email, message.as_string())
+        print("Email sent successfully!")
+    except Exception as e:
+        print(f"Failed to send email. Error: {str(e)}")
+
 if __name__ == "__main__":
     fetch = [
         ['Wired', 'https://www.wired.com/category/security/', 'h3', 'summary-item__hed', 20, True],
@@ -193,5 +217,4 @@ if __name__ == "__main__":
         news.extend(get_news_source(*source))
 
     formatted_news = format_news(news)
-    with open('newsletter.html', 'w') as news_file:
-        news_file.write(formatted_news)
+    send_email(formatted_news)
