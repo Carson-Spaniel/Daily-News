@@ -6,7 +6,7 @@ from secret import API_KEY, TOKEN, QUOTE_API, GMAIL_USER, GMAIL_KEY, RECIPIENTS
 from bs4 import BeautifulSoup
 import requests
 
-def get_news_source(source, url, element, class_, amount):
+def get_news_source(source, url, element, class_, amount, excludes=[]):
     news = []
 
     # Fetch headlines from the source
@@ -15,6 +15,11 @@ def get_news_source(source, url, element, class_, amount):
     news_headlines = news_soup.find_all(element, class_=class_)
 
     for headline in news_headlines:
+        if len(excludes):
+            for ex_element, ex_class in excludes:
+                exclusion = headline.find(ex_element, class_=ex_class)
+                if exclusion:
+                    exclusion.decompose()
         link = headline.find('a')['href'] if headline.find('a') else url
         if link.startswith('/'):
             link = url + link
@@ -70,7 +75,8 @@ def get_daily_quote(api_key):
         author = data['contents']['quotes'][0]['author']
         return f'"{quote}" - {author}'
     else:
-        return "Failed to fetch quote"
+        print(data)
+        return "Good morning. Let's have a great day."
 
 def format_news(news_list):
     # Get the current date and weekday
@@ -169,7 +175,7 @@ def format_news(news_list):
         else:
             count += 1
 
-        news_num += [f"<a href='{news_item[2]}'><li>{count-1}. {news_item[1]}</li></a>"]
+        news_num += [f"<a href='{news_item[2]}' target='_blank'><li>{count-1}. {news_item[1]}</li></a>"]
 
     formatted_news += "</ul></div></body></html>"
 
@@ -204,9 +210,9 @@ if __name__ == "__main__":
     amount = 10
 
     fetch = [
-        ['Engadget', 'https://www.engadget.com/tomorrow/', 'h4', 'My(0)', amount],
+        ['Engadget', 'https://www.engadget.com/', 'h2', 'My(0)', amount],
         ['TechCrunch', 'https://techcrunch.com/', 'h2', 'wp-block-post-title', amount],
-        ['The Verge', 'https://www.theverge.com/', 'h2', 'leading-100', amount],
+        ['Gizmodo', 'https://gizmodo.com/latest', 'div', 'flex-1 self-center w-full', amount, [['div', 'hidden sm:block'],['p','mt-2 line-clamp-3 sm:line-clamp-2 font-serif xs:text-lg text-ellipsis break-words'],['div','mt-3 text-sm sm:text-base']]],
         ['Ars Technica', 'https://arstechnica.com/', 'h2', '', amount],
     ]
 
@@ -225,4 +231,4 @@ if __name__ == "__main__":
     with open('newsletter.html', 'w') as news:
         news.write(formatted_news)
     
-    send_email(formatted_news)
+    #send_email(formatted_news)
