@@ -68,7 +68,7 @@ def get_weather(api_key):
 def get_daily_quote(api_key):
     url = f'http://quotes.rest/qod.json?api_key={api_key}'
     response = requests.get(url)
-    data = response.json() #{'success': {'total': 1}, 'contents': {'quotes': [{'id': 'wPkodOctkz8HYuyIo1e8FgeF', 'quote': 'Winning is not everything, but the effort to win is.', 'length': 52, 'author': 'Zig Ziglar', 'language': 'en', 'tags': ['effort', 'inspire', 'winning', 'win'], 'sfw': 'sfw', 'permalink': 'https://theysaidso.com/quote/zig-ziglar-winning-is-not-everything-but-the-effort-to-win-is', 'title': 'Inspiring Quote of the day', 'category': 'inspire', 'background': 'https://theysaidso.com/assets/images/qod/qod-inspire.jpg', 'date': '2024-07-11'}]}, 'copyright': {'url': 'https://quotes.rest', 'year': '2024'}}
+    data = response.json()
 
     if 'contents' in data and 'quotes' in data['contents']:
         quote = data['contents']['quotes'][0]['quote']
