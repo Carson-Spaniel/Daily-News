@@ -49,7 +49,7 @@ def get_weather(api_key):
         weather_url = f'http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric'
         weather_response = requests.get(weather_url)
 
-        weather_data = weather_response.json() #{'coord': {'lon': -97.6772, 'lat': 30.6327}, 'weather': [{'id': 800, 'main': 'Clear', 'description': 'clear sky', 'icon': '01d'}], 'base': 'stations', 'main': {'temp': 32.14, 'feels_like': 33.47, 'temp_min': 31.04, 'temp_max': 33.02, 'pressure': 1014, 'humidity': 45, 'sea_level': 1014, 'grnd_level': 984}, 'visibility': 10000, 'wind': {'speed': 3.09, 'deg': 120}, 'clouds': {'all': 0}, 'dt': 1720659746, 'sys': {'type': 2, 'id': 2013267, 'country': 'US', 'sunrise': 1720611352, 'sunset': 1720661762}, 'timezone': -18000, 'id': 4693342, 'name': 'Georgetown', 'cod': 200}
+        weather_data = weather_response.json()
 
         if weather_data['cod'] == 200:
             weather_description = weather_data['weather'][0]['description'].title()
