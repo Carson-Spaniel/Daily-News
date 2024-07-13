@@ -175,7 +175,7 @@ def format_news(news_list):
         else:
             count += 1
 
-        news_num += [f"<a href='{news_item[2]}' target='_blank'><li>{count-1}. {news_item[1]}</li></a>"]
+        news_num += [f"<a href='{news_item[2]}' target='_blank'><li>{count-1}. {news_item[1].replace('â€™', "'")}</li></a>"]
 
     formatted_news += "</ul></div></body></html>"
 
