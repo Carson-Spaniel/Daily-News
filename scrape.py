@@ -6,6 +6,7 @@ from secret import API_KEY, TOKEN, QUOTE_API, GMAIL_USER, GMAIL_KEY, RECIPIENTS
 from bs4 import BeautifulSoup
 import requests
 
+#function to get news articles
 def get_news_source(source, url, element, class_, amount):
     news = []
 
