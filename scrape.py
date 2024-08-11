@@ -85,7 +85,7 @@ def format_news(news_list):
     weather_info = get_weather(API_KEY)  # Fetch detailed weather information
     daily_quote = get_daily_quote(QUOTE_API)
     
-    # Start the formatted news with the date and weekday
+    # Start the formatted news with the date and weekday, weather report, and a quote
     formatted_news = f"""
     <html>
         <head>
