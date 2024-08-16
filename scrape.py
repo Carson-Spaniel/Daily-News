@@ -6,6 +6,7 @@ from secret import API_KEY, TOKEN, QUOTE_API, GMAIL_USER, GMAIL_KEY, RECIPIENTS
 from bs4 import BeautifulSoup
 import requests
 
+#function to get news articles
 def get_news_source(source, url, element, class_, amount, excludes=[]):
     news = []
 
@@ -92,7 +93,7 @@ def format_news(news_list):
     weather_info = get_weather(API_KEY)  # Fetch detailed weather information
     daily_quote = get_daily_quote(QUOTE_API)
     
-    # Start the formatted news with the date and weekday
+    # Start the formatted news with the date and weekday, weather report, and a quote
     formatted_news = f"""
     <html>
         <head>
@@ -183,7 +184,7 @@ def format_news(news_list):
         else:
             count += 1
 
-        news_num += [f"<a href='{news_item[2]}' target='_blank'><li>{count-1}. {news_item[1].replace('â€™', "'")}</li></a>"]
+        news_num += [f"<a href='{news_item[2]}' target='_blank'><li>{count-1}. {news_item[1]}</li></a>"]
 
     formatted_news += "</ul></div></body></html>"
 
