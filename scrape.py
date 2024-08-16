@@ -37,45 +37,53 @@ def get_public_ip():
     return data.get('ip')
 
 def get_weather(api_key):
-    ip_address = get_public_ip()
-    url = f'https://ipinfo.io/{ip_address}?token={TOKEN}'
-    response = requests.get(url)
-    data = response.json()
+    try:
+        ip_address = get_public_ip()
+        url = f'https://ipinfo.io/{ip_address}?token={TOKEN}'
+        response = requests.get(url)
+        data = response.json()
 
-    if 'city' in data:
-        city = data['city']
-        region = data['region']
-        lat, lon = data['loc'].split(',')
-        weather_url = f'http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric'
-        weather_response = requests.get(weather_url)
+        if 'city' in data:
+            city = data['city']
+            region = data['region']
+            lat, lon = data['loc'].split(',')
+            weather_url = f'http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric'
+            weather_response = requests.get(weather_url)
 
-        weather_data = weather_response.json()
+            weather_data = weather_response.json()
 
-        if weather_data['cod'] == 200:
-            weather_description = weather_data['weather'][0]['description'].title()
-            temp_celsius = weather_data['main']['temp']
-            temp_fahrenheit = round(temp_celsius * 9/5 + 32, 1)
-            temp_feels_like_celsius = weather_data['main']['feels_like']
-            temp_feels_like_fahrenheit = round(temp_feels_like_celsius * 9/5 + 32, 1)
-            wind_speed_mps = weather_data['wind']['speed']
-            wind_speed_mph = round(wind_speed_mps * 2.237, 1)  # Convert m/s to mph
-            return f"{city}, {region}: {weather_description}, {temp_feels_like_fahrenheit}°F, {wind_speed_mph} mph\n"
+            if weather_data['cod'] == 200:
+                weather_description = weather_data['weather'][0]['description'].title()
+                temp_celsius = weather_data['main']['temp']
+                temp_fahrenheit = round(temp_celsius * 9/5 + 32, 1)
+                temp_feels_like_celsius = weather_data['main']['feels_like']
+                temp_feels_like_fahrenheit = round(temp_feels_like_celsius * 9/5 + 32, 1)
+                wind_speed_mps = weather_data['wind']['speed']
+                wind_speed_mph = round(wind_speed_mps * 2.237, 1)  # Convert m/s to mph
+                return f"{city}, {region}: {weather_description}, {temp_feels_like_fahrenheit}°F, {wind_speed_mph} mph\n"
+            else:
+                return "Failed to fetch weather information"
         else:
-            return "Failed to fetch weather information"
-    else:
-        return "Failed to determine location"
+            return "Failed to determine location"
+    except Exception as e:
+        print(e)
+        return "Error occurred gathering weather"
 
 def get_daily_quote(api_key):
-    url = f'http://quotes.rest/qod.json?api_key={api_key}'
-    response = requests.get(url)
-    data = response.json()
+    try:
+        url = f'http://quotes.rest/qod.json?api_key={api_key}'
+        response = requests.get(url)
+        data = response.json()
 
-    if 'contents' in data and 'quotes' in data['contents']:
-        quote = data['contents']['quotes'][0]['quote']
-        author = data['contents']['quotes'][0]['author']
-        return f'"{quote}" - {author}'
-    else:
-        print(data)
+        if 'contents' in data and 'quotes' in data['contents']:
+            quote = data['contents']['quotes'][0]['quote']
+            author = data['contents']['quotes'][0]['author']
+            return f'"{quote}" - {author}'
+        else:
+            print(data)
+            return "Good morning. Let's have a great day."
+    except Exception as e:
+        print(e)
         return "Good morning. Let's have a great day."
 
 def format_news(news_list):
